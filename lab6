@@ -1,0 +1,107 @@
+#include "stdafx.h"
+#include "conio.h"
+#include "stdlib.h“
+//Структура узлов
+typedef struct Node
+{
+	int val; //значение в узле
+	struct Node *next; //указатели на элементы структуры
+} NODE, *pNODE;
+//список элементов
+typedef struct List
+{
+	pNODE top;
+	int len;
+}LIST, *pLIST;
+pLIST create_list();
+int isempty(pLIST pL);
+pNODE getpointer(pLIST pL, int date);
+int add(pLIST pL, pNODE Pn, int date);
+pNODE find(pLIST pL, int date);
+int delnode(pLIST, pNODE pN);
+void clearlist(pLIST pL);
+void show(pLIST pL);
+void deletelist(pLIST pL
+int _tmain(int argc, _TCHAR* argv[])
+{
+pLIST pL;
+pNODE p;
+int x,i;
+pL=create_list();
+for(i=0;i<10;i++){
+	x=rand()%20;
+	add(pL, getpointer(pL,x),x);
+}
+show(pL);
+deletelist(pL);
+	_getch();
+	return 0;
+}
+//выделение динамической памяти для хранения списка
+pLIST create_list(){
+	pLIST pL;
+	pL = (pLIST)malloc(sizeof(LIST));
+	if (!pL) return NULL;
+	pL->top = NULL;
+	pL->len = 0; 
+	return pL;
+//проверка списка на наличие элементов
+int isempty(pLIST pL){
+	if (!pL->top) return 1;
+	return 0;
+}
+//определение места вставки следующего узла
+pNODE getpointer(pLIST pL, int date){
+	pNODE p = pL->top;
+	if (isempty(pL)) return NULL;
+	if (date < p->val) return p;
+	while (p->next && p->next->val < date)
+		p = p->next;
+	return p;
+}
+//добавление узла
+int add(pLIST pL, pNODE Pn, int date){
+	pNODE pnew, p = pL->top;
+	pnew = (pNODE)malloc(sizeof(NODE));
+	if (!pnew) return 0;
+	pL->len++;
+	pnew->val = date;
+	if (isempty(pL) || date < p->val)
+	{
+		pnew->next = p;
+		pL->top = pnew;
+		return 1;
+	}
+	pnew->next = Pn->next;
+	Pn->next = pnew;
+	return 1;
+}
+//нахождение узла в списке
+pNODE find(pLIST pL, int date){
+	pNODE p = pL->top;
+	if (isempty(pL)) return NULL;
+	while (p&&p->val != date) p = p->next;
+	return p;
+}
+//удаление узла
+int delnode(pLIST pL, pNODE pN){	
+if(pN==NULL) return 0;
+else{         /*if(pN==pL->top)
+	                   {pL->top=pN->next;
+	                        free(pN);}
+	                           else*/
+//вывод списка
+void show(pLIST pL){
+	pNODE p=pL->top;
+	while (p){
+		printf_s("%u->%d->%u\n",p,p->val,p->next);
+		p=p->next;}
+}
+//очищение памяти отведенной для списка
+void clearlist(pLIST pL){
+	pNODE p=pL->top;
+	while(p->next!=NULL){
+		delnode(pL,p);
+		//free(p);
+		pL->len--;
+	
